@@ -28,7 +28,8 @@ var addr struct {
 }
 
 func main() {
-	flag.StringVar(&config.ConfigFilePath, "config-file-path", "./config.json", "config file path(./config.json)")
+	flag.StringVar(&config.ConfigFilePath, "config-file-path", "/usr/config/config.json", "config file path(./config.json)")
+	flag.Parse()
 
 	flags := filestream.ConfigFilePath{
 		Verbose:    false,
