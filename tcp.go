@@ -5,7 +5,7 @@ import (
 	"net"
 	"time"
 
-	"middle-fish/socks"
+	"github.com/lnnupet/middle-fish/socks"
 )
 
 // Create a SOCKS server listening on addr and proxy to server.

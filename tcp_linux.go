@@ -6,7 +6,7 @@ import (
 	"syscall"
 	"unsafe"
 
-	"middle-fish/socks"
+	"github.com/lnnupet/middle-fish/socks"
 )
 
 const (

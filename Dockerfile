@@ -4,7 +4,7 @@ ENV GOPROXY https://goproxy.cn,direct
 
 RUN apk upgrade \
     && apk add git \
-    && go get github.com/lnnupet/middle-fish
+    && go get github.com/lnnupet/middle-fish \
     && go get github.com/shadowsocks/v2ray-plugin
 
 FROM alpine:3.10 AS dist

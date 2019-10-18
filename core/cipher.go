@@ -7,8 +7,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/shadowsocks/go-shadowsocks2/shadowaead"
-	"github.com/shadowsocks/go-shadowsocks2/shadowstream"
+	"github.com/lnnupet/middle-fish/shadowaead"
+	"github.com/lnnupet/middle-fish/shadowstream"
 )
 
 type Cipher interface {

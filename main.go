@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"middle-fish/files/config/filestream"
 	"net/url"
 	"os"
 	"os/signal"
@@ -13,7 +12,8 @@ import (
 	"syscall"
 	"time"
 
-	"middle-fish/core"
+	"github.com/lnnupet/middle-fish/core"
+	"github.com/lnnupet/middle-fish/files/config/filestream"
 )
 
 var config struct {

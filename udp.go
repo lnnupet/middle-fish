@@ -7,7 +7,7 @@ import (
 
 	"sync"
 
-	"middle-fish/socks"
+	"github.com/lnnupet/middle-fish/socks"
 )
 
 type mode int
