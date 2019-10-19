@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/lnnupet/middle-fish/core"
-	"github.com/lnnupet/middle-fish/files/config/filestream"
+	"github.com/lnnupet/middle-fish/files/filestream"
 )
 
 var config struct {
