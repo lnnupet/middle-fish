@@ -70,6 +70,7 @@ func main() {
 
 	fmt.Println(flags)
 
+	// []byte("")  capacity->32,length->0
 	cipher, err := core.PickCipher(flags.Cipher, []byte(""), flags.Password)
 	if err != nil {
 		log.Fatal(err)
