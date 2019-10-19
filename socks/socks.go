@@ -7,16 +7,6 @@ import (
 	"strconv"
 )
 
-// UDPEnabled is the toggle for UDP support
-var UDPEnabled = false
-
-// SOCKS request commands as defined in RFC 1928 section 4.
-const (
-	CmdConnect      = 1
-	CmdBind         = 2
-	CmdUDPAssociate = 3
-)
-
 // SOCKS address types as defined in RFC 1928 section 5.
 const (
 	AtypIPv4       = 1
@@ -169,46 +159,3 @@ func ParseAddr(s string) Addr {
 }
 
 // Handshake fast-tracks SOCKS initialization to get target address to connect.
-func Handshake(rw io.ReadWriter) (Addr, error) {
-	// Read RFC 1928 for request and reply structure and sizes.
-	buf := make([]byte, MaxAddrLen)
-	// read VER, NMETHODS, METHODS
-	if _, err := io.ReadFull(rw, buf[:2]); err != nil {
-		return nil, err
-	}
-	nmethods := buf[1]
-	if _, err := io.ReadFull(rw, buf[:nmethods]); err != nil {
-		return nil, err
-	}
-	// write VER METHOD
-	if _, err := rw.Write([]byte{5, 0}); err != nil {
-		return nil, err
-	}
-	// read VER CMD RSV ATYP DST.ADDR DST.PORT
-	if _, err := io.ReadFull(rw, buf[:3]); err != nil {
-		return nil, err
-	}
-	cmd := buf[1]
-	addr, err := readAddr(rw, buf)
-	if err != nil {
-		return nil, err
-	}
-	switch cmd {
-	case CmdConnect:
-		_, err = rw.Write([]byte{5, 0, 0, 1, 0, 0, 0, 0, 0, 0}) // SOCKS v5, reply succeeded
-	case CmdUDPAssociate:
-		if !UDPEnabled {
-			return nil, ErrCommandNotSupported
-		}
-		listenAddr := ParseAddr(rw.(net.Conn).LocalAddr().String())
-		_, err = rw.Write(append([]byte{5, 0, 0}, listenAddr...)) // SOCKS v5, reply succeeded
-		if err != nil {
-			return nil, ErrCommandNotSupported
-		}
-		err = InfoUDPAssociate
-	default:
-		return nil, ErrCommandNotSupported
-	}
-
-	return addr, err // skip VER, CMD, RSV fields
-}

@@ -50,14 +50,12 @@ var streamList = map[string]struct {
 	KeySize int
 	New     func(key []byte) (shadowstream.Cipher, error)
 }{
-	"AES-128-CTR":   {16, shadowstream.AESCTR},
-	"AES-192-CTR":   {24, shadowstream.AESCTR},
-	"AES-256-CTR":   {32, shadowstream.AESCTR},
-	"AES-128-CFB":   {16, shadowstream.AESCFB},
-	"AES-192-CFB":   {24, shadowstream.AESCFB},
-	"AES-256-CFB":   {32, shadowstream.AESCFB},
-	"CHACHA20-IETF": {32, shadowstream.Chacha20IETF},
-	"XCHACHA20":     {32, shadowstream.Xchacha20},
+	"AES-128-CTR": {16, shadowstream.AESCTR},
+	"AES-192-CTR": {24, shadowstream.AESCTR},
+	"AES-256-CTR": {32, shadowstream.AESCTR},
+	"AES-128-CFB": {16, shadowstream.AESCFB},
+	"AES-192-CFB": {24, shadowstream.AESCFB},
+	"AES-256-CFB": {32, shadowstream.AESCFB},
 }
 
 // ListCipher returns a list of available cipher names sorted alphabetically.

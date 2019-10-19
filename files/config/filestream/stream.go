@@ -17,11 +17,11 @@ type ConfigFilePath struct {
 	UDPTimeout time.Duration `json:"udp_timeout"`
 }
 
-func (c *ConfigFilePath) ParseConfigFile(filePath string) (err error) {
+func (c *ConfigFilePath) ParseConfigFile(filePath string) error {
 	fileData, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		return
+		return err
 	}
 	err = json.Unmarshal(fileData, c)
-	return
+	return err
 }
