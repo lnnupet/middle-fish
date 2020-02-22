@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"net"
-	"sync"
 	"time"
 
-	"github.com/lnnupet/middle-fish/socks"
+	"sync"
+
+	"github.com/shadowsocks/go-shadowsocks2/socks"
 )
 
 type mode int
@@ -17,10 +19,6 @@ const (
 )
 
 const udpBufSize = 64 * 1024
-
-// Listen on laddr for UDP packets, encrypt and send to server to reach target.
-
-// Listen on laddr for Socks5 UDP packets, encrypt and send to server to reach target.
 
 // Listen on addr for encrypted packets and basically do UDP NAT.
 func udpRemote(addr string, shadow func(net.PacketConn) net.PacketConn) {
@@ -119,7 +117,7 @@ func (m *natmap) Add(peer net.Addr, dst, src net.PacketConn, role mode) {
 	m.Set(peer.String(), src)
 
 	go func() {
-		_ = timedCopy(dst, peer, src, m.timeout, role)
+		timedCopy(dst, peer, src, m.timeout, role)
 		if pc := m.Del(peer.String()); pc != nil {
 			pc.Close()
 		}
@@ -131,7 +129,7 @@ func timedCopy(dst net.PacketConn, target net.Addr, src net.PacketConn, timeout 
 	buf := make([]byte, udpBufSize)
 
 	for {
-		_ = src.SetReadDeadline(time.Now().Add(timeout))
+		src.SetReadDeadline(time.Now().Add(timeout))
 		n, raddr, err := src.ReadFrom(buf)
 		if err != nil {
 			return err

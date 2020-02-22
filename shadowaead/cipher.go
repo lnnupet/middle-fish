@@ -4,12 +4,14 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/sha1"
+	"errors"
+	"golang.org/x/crypto/hkdf"
 	"io"
 	"strconv"
-
-	"golang.org/x/crypto/chacha20poly1305"
-	"golang.org/x/crypto/hkdf"
 )
+
+// ErrRepeatedSalt means detected a reused salt
+var ErrRepeatedSalt = errors.New("repeated salt detected")
 
 type Cipher interface {
 	KeySize() int
@@ -71,13 +73,4 @@ func AESGCM(psk []byte) (Cipher, error) {
 		return nil, aes.KeySizeError(l)
 	}
 	return &metaCipher{psk: psk, makeAEAD: aesGCM}, nil
-}
-
-// Chacha20Poly1305 creates a new Cipher with a pre-shared key. len(psk)
-// must be 32.
-func Chacha20Poly1305(psk []byte) (Cipher, error) {
-	if len(psk) != chacha20poly1305.KeySize {
-		return nil, KeySizeError(chacha20poly1305.KeySize)
-	}
-	return &metaCipher{psk: psk, makeAEAD: chacha20poly1305.New}, nil
 }

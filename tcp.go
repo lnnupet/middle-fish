@@ -8,12 +8,6 @@ import (
 	"github.com/lnnupet/middle-fish/socks"
 )
 
-// Create a SOCKS server listening on addr and proxy to server.
-
-// Create a TCP tunnel from addr to target via server.
-
-// Listen on addr and proxy to server to reach target from getAddr.
-
 // Listen on addr for incoming connections.
 func tcpRemote(addr string, shadow func(net.Conn) net.Conn) {
 	l, err := net.Listen("tcp", addr)
@@ -32,7 +26,7 @@ func tcpRemote(addr string, shadow func(net.Conn) net.Conn) {
 
 		go func() {
 			defer c.Close()
-			_ = c.(*net.TCPConn).SetKeepAlive(true)
+			c.(*net.TCPConn).SetKeepAlive(true)
 			c = shadow(c)
 
 			tgt, err := socks.ReadAddr(c)
@@ -47,7 +41,7 @@ func tcpRemote(addr string, shadow func(net.Conn) net.Conn) {
 				return
 			}
 			defer rc.Close()
-			_ = rc.(*net.TCPConn).SetKeepAlive(true)
+			rc.(*net.TCPConn).SetKeepAlive(true)
 
 			logf("proxy %s <-> %s", c.RemoteAddr(), tgt)
 			_, _, err = relay(c, rc)
@@ -72,14 +66,14 @@ func relay(left, right net.Conn) (int64, int64, error) {
 
 	go func() {
 		n, err := io.Copy(right, left)
-		_ = right.SetDeadline(time.Now()) // wake up the other goroutine blocking on right
-		_ = left.SetDeadline(time.Now())  // wake up the other goroutine blocking on left
+		right.SetDeadline(time.Now()) // wake up the other goroutine blocking on right
+		left.SetDeadline(time.Now())  // wake up the other goroutine blocking on left
 		ch <- res{n, err}
 	}()
 
 	n, err := io.Copy(left, right)
-	_ = right.SetDeadline(time.Now()) // wake up the other goroutine blocking on right
-	_ = left.SetDeadline(time.Now())  // wake up the other goroutine blocking on left
+	right.SetDeadline(time.Now()) // wake up the other goroutine blocking on right
+	left.SetDeadline(time.Now())  // wake up the other goroutine blocking on left
 	rs := <-ch
 
 	if err == nil {

@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"flag"
-	"fmt"
 	"log"
 	"net/url"
 	"os"
@@ -28,22 +27,17 @@ var addr struct {
 }
 
 func main() {
+
 	flag.StringVar(&config.ConfigFilePath, "config-file-path", "./config.json", "config file path(./config.json)")
 	flag.Parse()
 
 	flags := filestream.ConfigFilePath{
 		Verbose:    false,
-		Server:     "",
-		ListenPort: "65123",
-		Cipher:     "AEAD_AES_128_GCM",
-		Password:   "abc123456",
-		Plugin:     "",
-		PluginOpts: "",
 		UDPTimeout: 5 * time.Minute,
 	}
-	var err error
+
 	if config.ConfigFilePath != "" {
-		err = flags.ParseConfigFile(config.ConfigFilePath)
+		err := flags.ParseConfigFile(config.ConfigFilePath)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -54,21 +48,23 @@ func main() {
 
 	addr.TcpAddr = ":" + flags.ListenPort
 	if flags.Server != "" {
-		addr.TcpAddr, flags.Cipher, flags.Password, err = parseServerConfig(flags.Server)
+		tcpAddrTmp, cipherTmp, passwordTmp, err := parseServerConfig(flags.Server)
 		if err != nil {
 			log.Fatal(err)
 		}
+		addr.TcpAddr = tcpAddrTmp
+		flags.Cipher = cipherTmp
+		flags.Password = passwordTmp
 	}
 	addr.UdpAddr = addr.TcpAddr
 
 	if flags.Plugin != "" {
-		addr.TcpAddr, err = startPlugin(flags.Plugin, flags.PluginOpts, addr.TcpAddr, true)
+		tcpAddrTmp, err := startPlugin(flags.Plugin, flags.PluginOpts, addr.TcpAddr, true)
 		if err != nil {
 			log.Fatal(err)
 		}
+		addr.TcpAddr = tcpAddrTmp
 	}
-
-	fmt.Println(flags)
 
 	// []byte("")  capacity->32,length->0
 	cipher, err := core.PickCipher(flags.Cipher, []byte(""), flags.Password)

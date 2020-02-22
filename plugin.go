@@ -38,17 +38,17 @@ func startPlugin(plugin, pluginOpts, ssAddr string, isServer bool) (newAddr stri
 
 func killPlugin() {
 	if pluginCmd != nil {
-		_ = pluginCmd.Process.Signal(syscall.SIGTERM)
+		pluginCmd.Process.Signal(syscall.SIGTERM)
 		waitCh := make(chan struct{})
 		go func() {
-			_ = pluginCmd.Wait()
+			pluginCmd.Wait()
 			close(waitCh)
 		}()
 		timeout := time.After(3 * time.Second)
 		select {
 		case <-waitCh:
 		case <-timeout:
-			_ = pluginCmd.Process.Kill()
+			pluginCmd.Process.Kill()
 		}
 	}
 }
@@ -113,6 +113,6 @@ func getFreePort() (string, error) {
 		return "", err
 	}
 	port := fmt.Sprintf("%d", l.Addr().(*net.TCPAddr).Port)
-	_ = l.Close()
+	l.Close()
 	return port, nil
 }
