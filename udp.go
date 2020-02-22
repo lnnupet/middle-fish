@@ -1,13 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"net"
+	"sync"
 	"time"
 
-	"sync"
-
-	"github.com/shadowsocks/go-shadowsocks2/socks"
+	"github.com/lnnupet/middle-fish/socks"
 )
 
 type mode int

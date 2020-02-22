@@ -7,7 +7,7 @@ import (
 	"io"
 	"net"
 
-	"github.com/shadowsocks/go-shadowsocks2/internal"
+	"github.com/lnnupet/middle-fish/internal"
 )
 
 // payloadSizeMask is the maximum size of payload in bytes.
