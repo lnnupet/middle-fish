@@ -4,7 +4,7 @@ import (
 	"hash/fnv"
 	"sync"
 
-	"github.com/riobard/go-bloom"
+	"github.com/lnnupet/middle-fish/bloom"
 )
 
 // simply use Double FNV here as our Bloom Filter hash

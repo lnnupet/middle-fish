@@ -1,8 +1,5 @@
 module github.com/lnnupet/middle-fish
 
-go 1.13
+go 1.14
 
-require (
-	github.com/riobard/go-bloom v0.0.0-20200213042214-218e1707c495
-	golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d
-)
+require golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d
