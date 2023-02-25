@@ -2,4 +2,4 @@ module github.com/lnnupet/middle-fish
 
 go 1.14
 
-require golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d
+require golang.org/x/crypto v0.1.0
